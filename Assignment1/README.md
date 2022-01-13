@@ -1,4 +1,4 @@
-# msci-nlp-w22
+# Assignment 1
 
 Jonathan Chen
 20722167
