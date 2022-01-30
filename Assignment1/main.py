@@ -1,3 +1,6 @@
+# Jonathan Chen, 20722167
+# University of Waterloo
+
 import sys
 import re 
 import random
@@ -6,9 +9,11 @@ import os
 import numpy as np
 
 def read_file(file_path, file_name):
-    with open(file_path + file_name) as file:
+    # Read data into files as a list
+    with open(file_path + "/" + file_name) as file:
         lines = [line.strip() for line in file]
 
+    # Append a 1 or 0 as the labels
     if file_name == 'pos.txt':
         lines = [[line, 1] for line in lines]    
     else: 
@@ -17,34 +22,44 @@ def read_file(file_path, file_name):
     return lines
 
 def tokenize(data):
+    # Remove any of these characters
     pattern = "[!\"#$%&()*+/:;<=>@[\\]^`{|}~\t\n]"
     stops = set(stopwords.words('english'))
     tokens = list()
     tokens_without_stopwords = list()
     labels = list()
     for line in data:
+        # Remove characters
         contents = re.sub(pattern, "", line[0])
-        contents = contents.split()
-        tokens.append(contents)
 
+        # Tokenize by splitting on whitespace
+        contents = contents.split()
+
+        # Create list of tokens
+        tokens.append(contents)
         tokens_without_stopwords.append([x for x in contents if x.lower() not in stops])
 
+        # Create list of labels
         labels.append(line[1])
 
     return tokens, tokens_without_stopwords, labels
 
 def main(file_path):
+    # Read in files
     pos_text = read_file(file_path, 'pos.txt')
     neg_text = read_file(file_path, 'neg.txt')
 
     data = pos_text+neg_text
 
+    # Randomize the data
     random.shuffle(data)
     tokens, tokens_without_stopwords, labels = tokenize(data)
 
+    # Determine where to split the data
     percent80 = int(len(tokens)*0.8)
     percent90 = int(len(tokens)*0.9)
 
+    # Split the data
     train = tokens[0:percent80]
     validation = tokens[percent80: percent90]
     test = tokens[percent90 :]
@@ -52,6 +67,7 @@ def main(file_path):
     if not os.path.exists("data"):
         os.makedirs("data")
 
+    # Write to output files
     np.savetxt("data/out.csv", tokens, delimiter=',', fmt = '%s')
     np.savetxt("data/train.csv", train, delimiter=',', fmt='%s')
     np.savetxt("data/val.csv", validation, delimiter=',', fmt='%s')
