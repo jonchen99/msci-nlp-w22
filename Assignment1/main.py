@@ -9,7 +9,7 @@ import os
 import numpy as np
 
 def read_file(file_path, file_name):
-    # Read data into files as a list
+    # Read data from files into a list
     with open(file_path + "/" + file_name) as file:
         lines = [line.strip() for line in file]
 
