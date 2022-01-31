@@ -4,9 +4,9 @@
 import sys
 import re 
 import random
-from nltk.corpus import stopwords
 import os
-import numpy as np
+import csv
+
 
 def read_file(file_path, file_name):
     # Read data from files into a list
@@ -15,16 +15,23 @@ def read_file(file_path, file_name):
 
     # Append a 1 or 0 as the labels
     if file_name == 'pos.txt':
-        lines = [[line, 1] for line in lines]    
+        lines = [[line, "1"] for line in lines]    
     else: 
-        lines = [[line, 0] for line in lines]    
+        lines = [[line, "0"] for line in lines]    
 
     return lines
+
+def write_file(file_path, data) :
+    with open(file_path, "w", newline="") as f:
+        writer = csv.writer(f, quotechar='"', delimiter=',', quoting=csv.QUOTE_ALL, skipinitialspace=True)
+        writer.writerows(data)
 
 def tokenize(data):
     # Remove any of these characters
     pattern = "[!\"#$%&()*+/:;<=>@[\\]^`{|}~\t\n]"
-    stops = set(stopwords.words('english'))
+
+    # Stopwords from nltk stopwords
+    stops = {'as', 'are', 'wasn', "wouldn't", 'those', 'and', 'himself', 'their', 've', 'at', 'off', 'by', "you'll", 'hers', 'what', 'be', 'few', 'aren', 'while', 'our', 'against', 'not', "haven't", 'to', 'an', 'haven', 'itself', 'into', 'with', 'through', "you're", 'theirs', 'themselves', 'but', "isn't", 'them', "hasn't", 'can', "shouldn't", "wasn't", 'wouldn', "mustn't", 'doing', 'll', 'if', 'any', 'she', 'once', 'down', 'm', 'having', 'shouldn', 'it', 'herself', 'am', 'during', 'between', 'about', 'where', 'who', 'from', 'we', 'my', 'shan', 'just', 'so', 'mustn', 'hadn', 'whom', "doesn't", 'hasn', 'after', "shan't", 'don', 'mightn', 'i', 'how', 'than', 's', 'again', 'of', 'for', "that'll", 'the', 'own', 'each', 'or', 'yours', 'he', 'there', 'most', 'ma', 'will', 'didn', 'here', 'that', 'a', 'why', 'y', "needn't", "you'd", 'ours', 'yourself', 'his', 'such', 'because', 'under', 'over', 'now', 'was', 'further', 'myself', 'very', 'couldn', 'has', 'both', 'did', 'in', 'on', 'doesn', 'had', 'you', 'above', 'him', 'been', 'no', 'before', 'this', 're', 'ourselves', "she's", 'other', 'only', "you've", 'its', 'below', 'then', 'ain', 'out', 'have', "won't", 'o', 'more', 'd', "weren't", 'does', "couldn't", "mightn't", 'me', 'yourselves', 'they', 'nor', 'is', 'weren', 'being', 'her', 'until', 'when', 't', "don't", "should've", 'same', 'too', "aren't", 'your', 'won', 'should', "hadn't", 'needn', 'which', 'these', "it's", 'do', 'were', 'isn', 'all', "didn't", 'up', 'some'}
     tokens = list()
     tokens_without_stopwords = list()
     labels = list()
@@ -68,28 +75,28 @@ def main(file_path):
         os.makedirs("data")
 
     # Write to output files
-    np.savetxt("data/out.csv", tokens, delimiter=',', fmt = '%s')
-    np.savetxt("data/train.csv", train, delimiter=',', fmt='%s')
-    np.savetxt("data/val.csv", validation, delimiter=',', fmt='%s')
-    np.savetxt("data/test.csv", test, delimiter=',', fmt='%s')
+    write_file("data/out.csv", tokens)
+    write_file("data/train.csv", train)
+    write_file("data/val.csv", validation)
+    write_file("data/test.csv", test)
 
     train_no_stopwords = tokens_without_stopwords[0:percent80]
     validation_no_stopwords = tokens_without_stopwords[percent80 : percent90]
     test_no_stopwords = tokens_without_stopwords[percent90 :]
 
-    np.savetxt("data/out_ns.csv", tokens_without_stopwords, delimiter=',', fmt = '%s')
-    np.savetxt("data/train_ns.csv", train_no_stopwords, delimiter=',', fmt='%s')
-    np.savetxt("data/val_ns.csv", validation_no_stopwords, delimiter=',', fmt='%s')
-    np.savetxt("data/test_ns.csv", test_no_stopwords, delimiter=',', fmt='%s')
+    write_file("data/out_ns.csv", tokens_without_stopwords)
+    write_file("data/train_ns.csv", train_no_stopwords)
+    write_file("data/val_ns.csv", validation_no_stopwords)
+    write_file("data/test_ns.csv", test_no_stopwords)
 
     train_labels = labels[0:percent80]
     validation_labels = labels[percent80 : percent90]
     test_labels = labels[percent90 :]
 
-    np.savetxt("data/labels.csv", labels, delimiter=',', fmt = '%s')
-    np.savetxt("data/train_labels.csv", train_labels, delimiter=',', fmt='%s')
-    np.savetxt("data/val_labels.csv", validation_labels, delimiter=',', fmt='%s')
-    np.savetxt("data/test_labels.csv", test_labels, delimiter=',', fmt='%s')
+    write_file("data/labels.csv", labels)
+    write_file("data/train_labels.csv", train_labels)
+    write_file("data/val_labels.csv", validation_labels)
+    write_file("data/test_labels.csv", test_labels)
 
 if __name__ == "__main__":
     if len(sys.argv) != 2:
