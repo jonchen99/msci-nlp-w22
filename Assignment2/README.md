@@ -3,6 +3,11 @@
 Jonathan Chen
 20722167
 
+## To run this program:
+```python3 main.py [path to data folder]``` 
+
+```python3 inference.py [path to txt file] [classifier to use]```
+
 | Stopwords Removed | Text Features    | Accuracy (test set)|
 | ----------------- | :---------------- | ------------------ |
 | yes               | unigrams         | 80.71%             |
