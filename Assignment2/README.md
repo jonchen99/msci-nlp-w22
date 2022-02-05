@@ -15,7 +15,7 @@ To run the inference file:
 | Stopwords Removed | Text Features    | Accuracy (test set)|
 | ----------------- | :---------------- | ------------------ |
 | yes               | unigrams         | 80.71%             |
-| yes               | bigrams          | 79.22&             |
+| yes               | bigrams          | 79.22%             |
 | yes               | unigrams+bigrams | 82.46%             |
 | no                | unigrams         | 80.89%             |
 | no                | bigrams          | 82.49%             |
