@@ -3,10 +3,14 @@
 Jonathan Chen
 20722167
 
-## To run this program:
+## Running the code:
+To run the main file:
 ```python3 main.py [path to data folder]``` 
 
+To run the inference file:
 ```python3 inference.py [path to txt file] [classifier to use]```
+
+## Report
 
 | Stopwords Removed | Text Features    | Accuracy (test set)|
 | ----------------- | :---------------- | ------------------ |
