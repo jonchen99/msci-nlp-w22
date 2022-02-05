@@ -41,7 +41,7 @@ def create_text_vectors(feature, train, val, test):
     X_val = count_vect.transform(val)
     X_test = count_vect.transform(test)
 
-    return X_train, X_val, X_test
+    return X_train, X_val, X_test, count_vect
 
 def train_model(X_train, X_val, train_labels, val_labels):
     # INITIAL PARAMETER SEARCH
@@ -83,18 +83,18 @@ def run_models(train, val, test, train_ns, val_ns, test_ns, train_labels, val_la
 
     for i, model in enumerate(models):
         if model.split(" ")[1] == 'stopwords':
-            X_train, X_val, X_test = create_text_vectors(model.split(" ")[0], train, val, test)
+            X_train, X_val, X_test, text_vectors = create_text_vectors(model.split(" ")[0], train, val, test)
             best_model = train_model(X_train, X_val, train_labels, val_labels)
             
             test_model(best_model, X_test, test_labels, model)
         else:
-            X_train, X_val, X_test = create_text_vectors(model.split(" ")[0], train_ns, val_ns, test_ns)
+            X_train, X_val, X_test, text_vectors = create_text_vectors(model.split(" ")[0], train_ns, val_ns, test_ns)
             best_model = train_model(X_train, X_val, train_labels, val_labels)
             
             test_model(best_model, X_test, test_labels, model)
         
         model_pkl = open("data/" + output_filenames[i], "wb")
-        pickle.dump(best_model, model_pkl)
+        pickle.dump([text_vectors, best_model], model_pkl)
         model_pkl.close()
 
 def main(file_path):
@@ -111,12 +111,6 @@ def main(file_path):
     test_labels = read_files(file_path+"/test_labels.csv", True)
 
     run_models(train, val, test, train_ns, val_ns, test_ns, train_labels, val_labels, test_labels)
-   
-
-    # nb = naive_bayes.MultinomialNB()
-    # clf = GridSearchCV(nb, param_grid= {'alpha': [1,2,3]})
-    # clf.fit(X_train, train_labels)
-    # y_pred = clf.predict(X_val)
 
 if __name__ == "__main__":
     # TODO: UNCOMMENT THIS
@@ -126,10 +120,6 @@ if __name__ == "__main__":
 
     # input_folder_path = sys.argv[1]
     input_folder_path =  "/Users/jonathanchen/Documents/School/4B/MSCI 598/Assignments/msci-nlp-w22/Assignment1/data"
-    
-    # TODO REMOVE THIS
-    # model_pkl = open("data/mnb_uni_ns.pkl", "rb")
-    # print(pickle.load(model_pkl))
 
     warnings.filterwarnings("ignore")
     main(input_folder_path)
