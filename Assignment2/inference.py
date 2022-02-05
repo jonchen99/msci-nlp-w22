@@ -14,8 +14,10 @@ def read_files(file_name):
 def main(text_file, model):
     # TODO: UNHARDCODE THE DATA FOLDER PATH
     data_folder =  "/Users/jonathanchen/Documents/School/4B/MSCI 598/Assignments/msci-nlp-w22/Assignment2/data"
+    # model_pkl = open(f"{data_folder}/{model}.pkl", "rb")
 
-    model_pkl = open(f"{data_folder}/{model}.pkl", "rb")
+    model_pkl = open(f"data/{model}.pkl", "rb")
+
     text_vector, classifier = pickle.load(model_pkl)
 
     text = read_files(text_file)
@@ -33,7 +35,7 @@ if __name__ == "__main__":
     # classifier = sys.argv[2]
 
     input_text_file =  "/Users/jonathanchen/Documents/School/4B/MSCI 598/Assignments/Assignment2/sample_review.txt"
-    model = "mnb_uni_bi_ns"
+    model = "mnb_uni_bi"
     
 
     main(input_text_file, model)
