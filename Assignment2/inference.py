@@ -25,7 +25,10 @@ def main(text_file, model):
     text = read_files(text_file)
     transformed_text = text_vector.transform(text)
     pred_labels = classifier.predict(transformed_text)
-    print(pred_labels)
+
+    for i, sentence in enumerate(text):
+        print(f"SENTENCE: {sentence}\t LABEL: {pred_labels[i]}")
+ 
 
 if __name__ == "__main__":
     if len(sys.argv) != 3:
