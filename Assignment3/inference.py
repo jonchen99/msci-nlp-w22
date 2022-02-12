@@ -1,8 +1,7 @@
 # Jonathan Chen, 20722167
 # University of Waterloo
-# February 11, 2022
+# February 18, 2022
 
-import pickle
 import re
 import sys
 from gensim.models import Word2Vec
