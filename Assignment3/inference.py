@@ -18,7 +18,7 @@ def read_file(file_name):
 
 def main(text_file):
     # Assumes the word2vec model is in the data/ folder of the directory
-    model = Word2Vec.load(f"data/w2v.model")
+    model = Word2Vec.load("data/w2v.model")
 
     # Read in the words
     words = read_file(text_file)
