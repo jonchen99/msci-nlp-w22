@@ -14,6 +14,7 @@ from keras.regularizers import l2
 from tensorflow.keras.utils import to_categorical
 from tensorflow.keras.preprocessing.text import Tokenizer
 from tensorflow.python.keras.preprocessing.sequence import pad_sequences
+import pickle
 
 EMBEDDING_DIMENSIONS = 200
 L2_REGULARIZATION = 0.001
@@ -57,13 +58,14 @@ def main(file_path):
         os.makedirs("data")
 
     # Read in the input files
+    # TODO: Determine if better to run with or without stopwords
     train = read_files(file_path+"/train.csv", False)
     val = read_files(file_path + "/val.csv", False)
     test = read_files(file_path+"/test.csv", False)
     
-    # train_ns = read_files(file_path+"/train_ns.csv", False)
-    # val_ns = read_files(file_path + "/val_ns.csv", False)
-    # test_ns = read_files(file_path+"/test_ns.csv", False)
+    # train = read_files(file_path+"/train_ns.csv", False)
+    # val = read_files(file_path + "/val_ns.csv", False)
+    # test = read_files(file_path+"/test_ns.csv", False)
 
     train_labels = read_files(file_path+"/train_labels.csv", True)
     val_labels = read_files(file_path+"/val_labels.csv", True)
@@ -96,6 +98,11 @@ def main(file_path):
     longest_sequences = [len(x) for x in (train_sequence + val_sequence)]
     longest_sequence = max(longest_sequences)
 
+    # Save the tokenizer to a pickle
+    tokenizer_pkl = open("data/tokenizer.pkl", "wb")
+    pickle.dump([tokenizer, longest_sequence], tokenizer_pkl)
+    tokenizer_pkl.close()
+
     # Pad all train, val, and test sentences to be the longest sequence length in the entire dataset (excluding test)
     train_pad = pad_sequences(train_sequence, maxlen=longest_sequence, padding='post')
     val_pad = pad_sequences(val_sequence, maxlen=longest_sequence, padding='post')
@@ -104,43 +111,56 @@ def main(file_path):
     w2v = Word2Vec.load(f"../Assignment3/data/w2v.model")
     embedding_matrix = create_embedding_matrix(tokenizer.word_index.keys(), w2v)
 
-    model = Sequential()
-    model.add(Embedding(input_dim=len(tokenizer.word_index)+1,
-                        output_dim=EMBEDDING_DIMENSIONS,
-                        embeddings_initializer=keras.initializers.Constant(embedding_matrix),
-                        input_length=longest_sequence,
-                        trainable=False,
-                        name='embedding_layer',
-                        ))
+    activation_functions = ['relu', 'sigmoid', 'tanh']
     
-    # TODO: Figure out what values to set for l2 regularizer
-    model.add(Dense(EMBEDDING_DIMENSIONS, activation='sigmoid', kernel_regularizer= l2(L2_REGULARIZATION)))
+    # Suggests dropout values between 20%-50% https://machinelearningmastery.com/dropout-regularization-deep-learning-models-keras/
+    dropouts = [0.2, 0.3, 0.4, 0.5]
 
-    model.add(Flatten())
+    for activation in activation_functions:
+        best_model = Sequential()
+        best_accuracy = 0
 
-    # TODO: Figure out what value to set for dropout
-    model.add(Dropout(0.4))
-    model.add(Dense(2, activation='softmax', kernel_regularizer=l2(L2_REGULARIZATION), name='output'))
-    print(model.summary())
+        for dropout in dropouts:
+            model = Sequential()
+            model.add(Embedding(input_dim=len(tokenizer.word_index)+1,
+                                output_dim=EMBEDDING_DIMENSIONS,
+                                embeddings_initializer=keras.initializers.Constant(embedding_matrix),
+                                input_length=longest_sequence,
+                                trainable=False,
+                                name='embedding_layer',
+                                ))
+            
+            model.add(Dense(EMBEDDING_DIMENSIONS, activation=activation, kernel_regularizer= l2(L2_REGULARIZATION)))
 
-    # TODO: Figure out what optimizer to use
-    model.compile(optimizer='adam', loss='categorical_crossentropy', metrics= ['accuracy'])
+            model.add(Flatten())
 
-    model.fit(train_pad, train_labels, batch_size=BATCH_SIZE, epochs=10, validation_data=(val_pad, val_labels))
-    
-    _, accuracy = model.evaluate(test_pad, test_labels, batch_size=BATCH_SIZE)
-    print("Test Set Accuracy = {:.4f}".format(accuracy))
+            model.add(Dropout(dropout))
 
-    # TODO: This saves the model to a folder. Is that allowed?
-    # model.save('data/nn_sigmoid.model')
-    # print(f"Model saved to {os.getcwd()}/data/nn_sigmoid.model")
+            model.add(Dense(2, activation='softmax', kernel_regularizer=l2(L2_REGULARIZATION), name='output'))
+            # print(model.summary())
+
+            model.compile(optimizer='adam', loss='categorical_crossentropy', metrics= ['accuracy'])
+
+            model.fit(train_pad, train_labels, batch_size=BATCH_SIZE, epochs=10, validation_data=(val_pad, val_labels))
+            
+            _, accuracy = model.evaluate(test_pad, test_labels, batch_size=BATCH_SIZE)
+            print(f"For activation function = {activation} and dropout={dropout}:")
+            print("Test Set Accuracy = {:.4f}".format(accuracy))
+
+            if (accuracy > best_accuracy):
+                best_accuracy = accuracy
+                best_model = model
+
+        # TODO: This saves the model to a folder. Is that allowed?
+        best_model.save(f'data/nn_{activation}.model')
+        print(f"Model saved to {os.getcwd()}/data/nn_{activation}.model")
 
 if __name__ == "__main__":
-    # if len(sys.argv) != 2:
-    #     print("ERROR: Invalid number of inputs")
-    #     exit(1)
+    if len(sys.argv) != 2:
+        print("ERROR: Invalid number of inputs")
+        exit(1)
 
-    # input_folder_path = sys.argv[1]
-    input_folder_path = "/Users/jonathanchen/Documents/School/4B/MSCI 598/Assignments/msci-nlp-w22/Assignment1/data"
+    input_folder_path = sys.argv[1]
+    # input_folder_path = "/Users/jonathanchen/Documents/School/4B/MSCI 598/Assignments/msci-nlp-w22/Assignment1/data"
 
     main(input_folder_path)
