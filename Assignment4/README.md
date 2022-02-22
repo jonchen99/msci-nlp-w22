@@ -2,3 +2,27 @@
 
 Jonathan Chen
 20722167
+
+## Running the code:
+To run the main file:
+```python3 main.py [path to data folder]``` 
+
+To run the inference file:
+```python3 inference.py [path to txt file] [classifier to use]```
+
+## Report
+
+| Activation Function | Dropout    | Accuracy (test set)|
+| --------------------| :--------- | ------------------ |
+| relu                | 0.2        | 00.00%             |
+| relu                | 0.3        | 00.00%             |
+| relu                | 0.4        | 00.00%             |
+| relu                | 0.5        | 00.00%             |
+| sigmoid             | 0.2        | 00.00%             |
+| sigmoid             | 0.3        | 00.00%             |
+| sigmoid             | 0.4        | 00.00%             |
+| sigmoid             | 0.5        | 00.00%             |
+| tanh                | 0.2        | 00.00%             |
+| tanh                | 0.3        | 00.00%             |
+| tanh                | 0.4        | 00.00%             |
+| tanh                | 0.5        | 00.00%             |
