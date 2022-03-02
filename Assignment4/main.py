@@ -58,7 +58,6 @@ def main(file_path):
         os.makedirs("data")
 
     # Read in the input files
-    # TODO: Determine if better to run with or without stopwords
     train = read_files(file_path+"/train.csv", False)
     val = read_files(file_path + "/val.csv", False)
     test = read_files(file_path+"/test.csv", False)
@@ -71,7 +70,7 @@ def main(file_path):
     val_labels = read_files(file_path+"/val_labels.csv", True)
     test_labels = read_files(file_path+"/test_labels.csv", True)
 
-    # TODO: REMOVE THIS
+    # Reducing the size of the dataset for testing
     # train = train[:1000]
     # val = val[:1000] 
     # test = test[:1000]
@@ -93,8 +92,6 @@ def main(file_path):
     val_sequence = tokenizer.texts_to_sequences(val)
     test_sequence = tokenizer.texts_to_sequences(test)
 
-    # TODO: Determine if test should be included in longest sequence
-    # longest_sequences = [len(x) for x in (train_sequences + val_sequences + test_sequences)]
     longest_sequences = [len(x) for x in (train_sequence + val_sequence)]
     longest_sequence = max(longest_sequences)
 
