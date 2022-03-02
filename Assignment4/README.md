@@ -23,7 +23,7 @@ With Stopwords:
 | sigmoid             | 0.3        | 73.83%             |
 | sigmoid             | 0.4        | 74.04%             |
 | sigmoid             | 0.5        | 73.37%             |
-| tanh                | 0.2        | 00.00%             |
+| tanh                | 0.2        | 76.01%             |
 | tanh                | 0.3        | 00.00%             |
 | tanh                | 0.4        | 00.00%             |
 | tanh                | 0.5        | 00.00%             |
