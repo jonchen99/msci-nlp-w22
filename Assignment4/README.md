@@ -19,7 +19,7 @@ With Stopwords:
 | relu                | 0.3        | 78.06%             |
 | relu                | 0.4        | 78.24%             |
 | relu                | 0.5        | 77.79%             |
-| sigmoid             | 0.2        | 00.00%             |
+| sigmoid             | 0.2        | 74.36%             |
 | sigmoid             | 0.3        | 00.00%             |
 | sigmoid             | 0.4        | 00.00%             |
 | sigmoid             | 0.5        | 00.00%             |
