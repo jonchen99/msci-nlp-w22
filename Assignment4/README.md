@@ -11,6 +11,7 @@ To run the inference file:
 ```python3 inference.py [path to txt file] [classifier to use]```
 
 ## Report
+With Stopwords:
 
 | Activation Function | Dropout    | Accuracy (test set)|
 | --------------------| :--------- | ------------------ |
