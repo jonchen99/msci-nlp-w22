@@ -49,7 +49,4 @@ if __name__ == "__main__":
     input_text_file = sys.argv[1]
     classifier = sys.argv[2]
 
-    # input_text_file = "/Users/jonathanchen/Documents/School/4B/MSCI 598/Assignments/Assignment4/sample_review.txt"
-    # classifier = "tanh"
-
     main(input_text_file, classifier)

@@ -158,6 +158,5 @@ if __name__ == "__main__":
         exit(1)
 
     input_folder_path = sys.argv[1]
-    # input_folder_path = "/Users/jonathanchen/Documents/School/4B/MSCI 598/Assignments/msci-nlp-w22/Assignment1/data"
 
     main(input_folder_path)
