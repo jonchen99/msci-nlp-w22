@@ -148,7 +148,6 @@ def main(file_path):
                 best_accuracy = accuracy
                 best_model = model
 
-        # TODO: This saves the model to a folder. Is that allowed?
         best_model.save(f'data/nn_{activation}.model')
         print(f"Model saved to {os.getcwd()}/data/nn_{activation}.model")
 
